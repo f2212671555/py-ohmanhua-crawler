@@ -1,1 +1,1 @@
-web: gunicorn --pythonpath mysite mysite.wsgi --log-file -
+web: gunicorn --pythonpath py_ohmanhua_crawler py_ohmanhua_crawler.wsgi --log-file -
