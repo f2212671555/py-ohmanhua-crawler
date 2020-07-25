@@ -5,7 +5,8 @@ import crawler.crawl.crawl_comic as cc
 
 def home(request):
     return render(request, 'home/home.html')
-
+    
+@csrf_protect
 def search_comic(request):
     if request.method == 'POST':
         form = ComicSearchForm(request.POST)
