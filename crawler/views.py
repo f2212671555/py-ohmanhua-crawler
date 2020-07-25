@@ -2,11 +2,12 @@
 from django.shortcuts import render
 from .forms import ComicSearchForm
 import crawler.crawl.crawl_comic as cc
+from django.views.decorators.csrf import csrf_exempt
 
 def home(request):
     return render(request, 'home/home.html')
-    
-@csrf_protect
+
+@csrf_exempt
 def search_comic(request):
     if request.method == 'POST':
         form = ComicSearchForm(request.POST)
