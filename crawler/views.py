@@ -19,6 +19,7 @@ def search_comic(request):
             comics = cc.crawl_search_comic(comic_name)
             if len(comics) > 0 :
                 return render(request,'comics/search.html',{
+                    'comic_name': comic_name,
                     'comics':  comics
                 })
             else:
