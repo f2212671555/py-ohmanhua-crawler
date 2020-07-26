@@ -9,7 +9,12 @@ class Chapter():
 
     def __repr__(self):
         return self.__str__()
-        
+    
+    def __jsonencode__(self):
+        return {'title': self._title,
+                'href':self._href,
+                'base_img_url':self._base_img_url}
+    
     @property
     def title(self):
         return self._title

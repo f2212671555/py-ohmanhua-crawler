@@ -12,18 +12,21 @@
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
     </head>
     <style>
-      #m_d{
-          text-align: center;
-      }  
+      /* .center{
+            position:absolute;
+            left: 50%;
+            top: 50%;
+            margin: -190px 0 0 -310px;
+        }    */
     </style>
     <body>
-      <div id = "m_d">
+      <div class = "center">
         {% for comic in comics %}
-        <div class="card" style="width: 18rem;">
+        <div class="card">
             <img src="{{ comic.img_url }}" class="card-img-top">
             <div class="card-body">
               <h5 class="card-title">{{ comic.name }}</h5>
-              <a href="/app/show/{{ comic.name }}{{ comic.href }}" class="btn btn-primary">Go somewhere</a>
+              <a href="/app/show/{{ comic.name }}{{ comic.href }}" class="btn btn-primary">GO</a>
             </div>
           </div>
         {% endfor %}

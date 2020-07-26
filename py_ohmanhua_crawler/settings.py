@@ -25,7 +25,7 @@ SECRET_KEY = '#=h5q6-518koq+ec0bbs=i(3!1=o48qnh1ed8^qqt3b9nos#@v'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['py-ohmanhua-crawler.herokuapp.com']
+ALLOWED_HOSTS = ['py-ohmanhua-crawler.herokuapp.com','*']
 
 
 # Application definition

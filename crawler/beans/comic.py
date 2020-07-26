@@ -12,6 +12,14 @@ class Comic():
     def __repr__(self):
         return self.__str__()
 
+    def __jsonencode__(self):
+        return {'name': self._name,
+                'href':self._href,
+                'img_url':self._img_url,
+                'detail':self._detail,
+                'chapters':self._chapters}
+
+
     @property
     def name(self):
         return self._name

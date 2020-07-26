@@ -12,15 +12,22 @@
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
     </head>
     <style>
-        form{
-            text-align: center;
+        .center{
+            position:absolute;
+            left: 50%;
+            top: 50%;
+            margin: -25px 0 0 -150px;
         }  
     </style>
     <body>
-        <form action="search" method="POST">
-            {% csrf_token %}
-            <input type="text" name = "comic_name" placeholder="漫畫名稱"/>
-            <input type="submit" value="查詢"/>
-        </form>
+        <div class="center">
+            <form class="form-inline" action="search" method="POST">
+                {% csrf_token %}
+                <div class="form-group mx-sm-3 mb-2">
+                    <input type="text" class="form-control" name = "comic_name" placeholder="漫畫名稱">
+                  </div>
+                <button type="submit" class="btn btn-primary mb-2">查詢</button>
+            </form>
+        </div>
     </body>
 </html>
