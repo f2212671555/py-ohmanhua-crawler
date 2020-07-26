@@ -33,7 +33,7 @@
     </style>
     <body>
       <div class="m_nav">
-        <div class="c_o circle"><label class="label-circle">TIP</label></div>
+        <div class="c_o circle"><label class="label-circle">TAP</label></div>
       </div>
       <div class = "center row">
         {% for comic in comics %}
@@ -41,7 +41,7 @@
             <img src="{{ comic.img_url }}" class="card-img-top">
             <div class="card-body">
               <h5 class="card-title">{{ comic.name }}</h5>
-              <button onclick="window.location.href='/app/show/{{ comic.name }}{{ comic.href }}'" class="btn btn-primary">GO</button>
+              <button onclick="window.location.href='/app/show/{{ comic.name }}{{ comic.href }}{{ version }}'" class="btn btn-primary">GO</button>
             </div>
           </div>
         {% endfor %}

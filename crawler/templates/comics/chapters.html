@@ -43,13 +43,13 @@
     </style>
     <body>
         <div class="m_nav">
-            <div class="c_o circle"><label class="label-circle">TIP</label></div>
+            <div class="c_o circle"><label class="label-circle">TAP</label></div>
           </div>
         <div>
             {% for chapter in comic.chapters %} 
             <div class="card">
                 <span id="chapter{{ forloop.counter }}" class="badge badge-dark">{{ forloop.counter }}</span>
-                <div class="card-body" onclick="window.location.href='/app/read/{{ name }}/{{ comic.href }}/{{ chapter.title }}'">
+                <div class="card-body" onclick="window.location.href='/app/read/{{ name }}/{{ comic.href }}/{{ chapter.title }}/{{ version }}'">
                     <h5 class="card-title">{{ chapter.title }}</h5>
                 </div>
               </div>
@@ -112,8 +112,8 @@
             $('html,body').animate({scrollTop:$(t).offset().top}, 500);
         }
 
-        function goBack() {
-            window.history.back();
+        function go_home() {
+            window.location.href='/app'
         }
 
         var status = 0
@@ -128,7 +128,7 @@
             var tar_top = ori_top + step_top
             
             $(".circle").animate({"top":tar_top}, "slow",function () {
-                $(".m_nav").append(`<div onclick="goBack()" class="c_o left-circle" style="top: ${tar_top}px;"><label class="label-circle">回上一頁</label></div>`)
+                $(".m_nav").append(`<div onclick="go_home()" class="c_o left-circle" style="top: ${tar_top}px;"><label class="label-circle">回上一頁</label></div>`)
 
                 $('.c_o').css("opacity",0.8)
 

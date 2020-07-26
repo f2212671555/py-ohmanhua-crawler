@@ -40,7 +40,7 @@
     </style>
     <body>
         <div class="m_nav">
-            <div class="c_o circle"><label class="label-circle">TIP</label></div>
+            <div class="c_o circle"><label class="label-circle">TAP</label></div>
         </div>
         <div class="row">
             <button type="button" class="c btn btn-primary col" onclick="go_chapters()">回目錄</button>
@@ -64,10 +64,17 @@
             return paddingLeft("0" +str,lenght);
         }
 
-        load_next_img(url,1)
+        var version = "{{ version }}"
+        load_next_img(url,1,version)
 
-        function load_next_img(url,i) {
-            var str_i = paddingLeft(i.toString(),4)
+        function load_next_img(url,i,version) {
+            var str_i = ""
+            if (version == "1") {
+                str_i = i + "t"
+            }else{
+                str_i = paddingLeft(i.toString(),4)
+            }
+            
             var imageUrl = url+ "/" +str_i +".jpg";
             // console.log(imageUrl)
 
@@ -78,7 +85,7 @@
             });
             img.on("load", function () {
                 i++
-                load_next_img(url,i)
+                load_next_img(url,i,version)
                 $('#imgs').append(div)
             });
             img.attr('src', imageUrl);
@@ -87,7 +94,7 @@
         }
         
         function go_chapters() {
-            window.location.href='/app/show/{{ name }}/{{ href }}'
+            window.location.href='/app/show/{{ name }}/{{ href }}/{{ version }}'
         }
 
         function go_home() {
@@ -95,11 +102,19 @@
         }
         
         function prePage() {
-            window.location.href='/app/read/{{ name }}/{{ href }}/{{ next_chapter }}'
+            var c = "{{ next_chapter }}"
+            if (c == "") {
+                return
+            }
+            window.location.href='/app/read/{{ name }}/{{ href }}/{{ next_chapter }}{{ version }}'
         }
 
         function nextPage() {
-            window.location.href='/app/read/{{ name }}/{{ href }}/{{ pre_chapter }}'
+            var c = "{{ pre_chapter }}"
+            if (c == "") {
+                return
+            }
+            window.location.href='/app/read/{{ name }}/{{ href }}/{{ pre_chapter }}{{ version }}'
         }
 
         var status = 0
