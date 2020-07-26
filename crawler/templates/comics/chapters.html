@@ -25,8 +25,26 @@
             width:100%;
             height:50px;
         }
+        .circle,.left-circle{
+            position: fixed;
+            background-color: white;
+            opacity: 0.5;
+            height: 80px;
+            width: 80px;
+            left: 50%;
+            margin: +40px 0 0 -47px;
+            border-radius: 50%;
+            z-index: 999;
+            text-align: center;
+        }
+        .label-circle{
+            padding: 25px 0px;
+        }
     </style>
     <body>
+        <div class="m_nav">
+            <div class="c_o circle"><label class="label-circle">TIP</label></div>
+          </div>
         <div>
             {% for chapter in comic.chapters %} 
             <div class="card">
@@ -93,5 +111,42 @@
             var t = "#chapter" + t_n
             $('html,body').animate({scrollTop:$(t).offset().top}, 500);
         }
+
+        function goBack() {
+            window.history.back();
+        }
+
+        var status = 0
+        $(".circle").mouseup(function(){
+            if (status == -1) {
+                return
+            }
+            status = -1
+
+            var ori_top = 40
+            var step_top = 120
+            var tar_top = ori_top + step_top
+            
+            $(".circle").animate({"top":tar_top}, "slow",function () {
+                $(".m_nav").append(`<div onclick="goBack()" class="c_o left-circle" style="top: ${tar_top}px;"><label class="label-circle">回上一頁</label></div>`)
+
+                $('.c_o').css("opacity",0.8)
+
+                var p_step = "+=" + step_top
+                var n_step = "-=" + step_top
+
+                $(".left-circle").animate({"left":n_step}, "slow")
+
+                var timeoutID = window.setTimeout(function () {
+                    $(".left-circle").animate({"left":p_step}, "slow",function (params) {
+                        $(".left-circle").remove()
+                        $(".circle").animate({"top":ori_top}, "slow")
+                        $('.c_o').css("opacity",0.5)
+                        status = 0
+                    })
+                }, 3400);
+            });
+           
+        });
     </script>
 </html>
