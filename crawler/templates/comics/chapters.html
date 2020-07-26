@@ -38,9 +38,13 @@
             {% endfor %}
             <div class="bottom">
                 <div class="input-group mb-3">
+                    <div class="input-group-append">
+                        <button class="gb btn btn-success" type="button" onclick="jump('top')">TOP</button>
+                        <button class="gb btn btn-success" type="button" onclick="jump('down')">DOWN</button>
+                    </div>
                     <input type="text" class="ji form-control" placeholder="跳到?話">
                     <div class="input-group-append">
-                      <button class="gb btn btn-success" type="button" onclick="jump()">GO</button>
+                      <button class="gb btn btn-success" type="button" onclick="jump('go')">GO</button>
                     </div>
                   </div>
             </div>
@@ -59,11 +63,35 @@
             });
         })
 
-        function jump() {
-                var t_n = $('.ji').val()
-                var t = "#chapter" + t_n
-                $('.ji').val("")
-                $('html,body').animate({scrollTop:$(t).offset().top}, 500);
+        function jump(param) {
+            var comic_chapters_num = "{{ comic_chapters_num }}"
+            var t_n = 1
+            switch (param) {
+                case 'top':
+                    t_n = 1
+                    break;
+                case 'down':
+                    t_n = comic_chapters_num
+                    break;
+                default:{
+                    t_n = parseInt($('.ji').val());
+                    $('.ji').val("")
+                    if (isNaN(t_n)) {
+                        return
+                    }
+                    
+                    if (comic_chapters_num < t_n) {
+                        t_n = comic_chapters_num
+                    }
+                    if (0 >= t_n) {
+                        t_n = 1
+                    }
+                    break;
+                }  
             }
+                
+            var t = "#chapter" + t_n
+            $('html,body').animate({scrollTop:$(t).offset().top}, 500);
+        }
     </script>
 </html>

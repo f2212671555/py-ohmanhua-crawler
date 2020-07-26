@@ -17,10 +17,12 @@
             left: 50%;
             top: 50%;
             margin: -25px 0 0 -150px;
+            text-align: center;
         }  
     </style>
-    <body>
+    <body style="background:url(https://upload.wikimedia.org/wikipedia/commons/thumb/7/77/Animated-gif-about-fashion-in-u-n-i-c-o-r-n-by-many-cute-animal-doodles-png-798_607.gif/316px-Animated-gif-about-fashion-in-u-n-i-c-o-r-n-by-many-cute-animal-doodles-png-798_607.gif)">
         <div class="center">
+            <span class="badge badge-light">{{ statement }}</span>
             <form class="form-inline" action="search" method="POST">
                 {% csrf_token %}
                 <div class="form-group mx-sm-3 mb-2">

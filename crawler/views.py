@@ -17,17 +17,25 @@ def search_comic(request):
         if form.is_valid():
             comic_name = form.cleaned_data['comic_name']
             comics = cc.crawl_search_comic(comic_name)
-            return render(request,'comics/search.html',{
+            if len(comics) > 0 :
+                return render(request,'comics/search.html',{
                     'comics':  comics
                 })
-    form = ComicSearchForm()
-    return render(request, 'home/home.html')
+            else:
+                return render(request, 'home/home.html',{
+                    "statement": "找不到符合的漫畫喔!!"
+                })
+            
+    return render(request, 'home/home.html',{
+                    "statement": "請再次輸入!!"
+                })
 
 def show_comic(request,name,href):
     comic = cc.crawl_one_comic(href)
     comic.chapters.reverse()
     return render(request, 'comics/chapters.html',{
                     'name': name,
+                    'comic_chapters_num': len(comic.chapters),
                     'comic':  comic
                 })
 
