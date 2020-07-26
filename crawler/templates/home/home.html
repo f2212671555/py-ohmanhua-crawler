@@ -41,24 +41,33 @@
                 {% csrf_token %}
                 <div class="form-group mx-sm-3 mb-2">
                     <input type="text" class="form-control" name = "comic_name" placeholder="漫畫名稱">
-                    <input type="hidden" class="v_f form-control" name = "version" value="0">
+                    <input type="hidden" class="v_f form-control" name = "version">
                   </div>
                 <button type="submit" class="btn btn-primary mb-2">查詢</button>
             </form>
         </div>
     </body>
     <script>
-        var version = 0
-        function change_version(){
-            if (version == 1) { // turn to normal
-                version = 0
-                $('.a_n_i').text("前往-暗黑版")
-            }else{ // turn to dark
-                version = 1
-                $('.a_n_i').text("前往-正常版")
-            }
-            $('.v_f').val(version)
-            
+        var version = "{{ version }}"
+        if (version === "") {
+            version = "0"
         }
+        $('.v_f').val(version)
+        if (version === "1") {
+            $('.a_n_i').text("前往-正常版")
+        }else{
+            $('.a_n_i').text("前往-暗黑版")
+        }
+
+        function change_version(){
+                if (version == "1") { // turn to normal
+                    version = "0"
+                    $('.a_n_i').text("前往-暗黑版")
+                }else{ // turn to dark
+                    version = "1"
+                    $('.a_n_i').text("前往-正常版")
+                }
+                $('.v_f').val(version)
+            }
     </script>
 </html>

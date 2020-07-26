@@ -27,12 +27,14 @@ def search_comic(request):
                 })
             else:
                 return render(request, 'home/home.html',{
+                    'version': version,
                     "statement": "找不到符合的漫畫喔!!"
                 })
             
     return render(request, 'home/home.html',{
-                    "statement": "請再次輸入!!"
-                })
+        'version': "0",
+        "statement": "請再次輸入!!"
+    })
 
 def show_comic(request,name,href,version):
     comic = cc.crawl_one_comic(href,version)
