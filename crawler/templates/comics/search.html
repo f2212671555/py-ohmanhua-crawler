@@ -37,17 +37,22 @@
       </div>
       <div class = "center">
         {% for comic in comics %}
-        <div class="card">
+          {% if forloop.first %}<div class="row">{% endif %}
+          <div class="card col-6 col-sm-3">
             <img src="{{ comic.img_url }}" class="card-img-top">
             <div class="card-body">
               <h5 class="card-title">{{ comic.name }}</h5>
               <button onclick="window.location.href='/app/show/{{ comic.name }}{{ comic.href }}{{ version }}'" class="btn btn-primary">GO</button>
             </div>
           </div>
+          {% if forloop.counter|divisibleby:"4" %}</div><div class="row">{% endif %}
+          {% if forloop.last %}</div>{% endif %}
         {% endfor %}
       </div>
     </body>
     <script>
+
+
 
       function go_home() {
           window.location.href='/app'
