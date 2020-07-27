@@ -42,7 +42,7 @@
             <img src="{{ comic.img_url }}" class="card-img-top">
             <div class="card-body">
               <h5 class="card-title">{{ comic.name }}</h5>
-              <button onclick="window.location.href='/app/show/{{ comic.name }}{{ comic.href }}{{ version }}'" class="btn btn-primary">GO</button>
+              <button onclick="go_chapters('{{ comic.name}}','{{ comic.href}}','{{ version }}')" class="btn btn-primary">GO</button>
             </div>
           </div>
           {% if forloop.counter|divisibleby:"4" %}</div><div class="row">{% endif %}
@@ -52,10 +52,13 @@
     </body>
     <script>
 
-
+      function go_chapters(comic_name,href,version) {
+        var comic_name_e = encodeURIComponent(comic_name)
+        window.location.href = `/app/show/${comic_name_e}${href}${version }`
+      }
 
       function go_home() {
-          window.location.href='/app'
+          window.location.href = '/app'
       }
 
       var status = 0
