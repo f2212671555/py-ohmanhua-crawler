@@ -70,9 +70,12 @@ def read_comic(request,name,href,title,version):
         next_chapter_index = current_index
         if current_index - 1 >= 0:
             pre_chapter_index = current_index - 1
-        if current_index + 1 <= len(comic.chapters):
+        if current_index + 1 < len(comic.chapters):
             next_chapter_index = current_index + 1
-        
+
+        print(pre_chapter_index)
+        print(next_chapter_index)
+
         base_img_url = cc.comic_img_base_url + "/" + href + "/" +title
         return render(request, 'comics/read.html',{
             'name': name,
