@@ -40,7 +40,7 @@
             <form class="form-inline" action="search" method="POST">
                 {% csrf_token %}
                 <div class="form-group mx-sm-3 mb-2">
-                    <input type="text" class="form-control" name = "comic_name" placeholder="漫畫名稱">
+                    <input type="text" class="form-control" name = "comic_name" placeholder="漫畫名稱" autocomplete="off">
                     <input type="hidden" class="v_f form-control" name = "version">
                   </div>
                 <button type="submit" class="btn btn-primary mb-2">查詢</button>
