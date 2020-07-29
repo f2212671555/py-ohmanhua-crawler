@@ -78,7 +78,7 @@
     <div class="input-group mb-3">
 
       <button class="gb btn btn-success" type="button" onclick="prePage()"><span
-          aria-hidden="true">&laquo;</span></button>
+          aria-hidden="true">&lt;</span></button>
       <button class="gb btn btn-success" type="button" onclick="go_page('1')">1</button>
 
       <input type="text" class="j_p_i form-control" placeholder="跳到?頁">
@@ -86,7 +86,7 @@
       <button class="gb btn btn-success" type="button"
         onclick="go_page('{{search.page_num}}')">{{search.page_num}}</button>
       <button class="gb btn btn-success" type="button" onclick="nextPage()"><span
-          aria-hidden="true">&raquo;</span></button>
+          aria-hidden="true">&gt;</span></button>
     </div>
 
     <form class="m_f form-inline" action="/app/search" method="POST">
