@@ -1,97 +1,201 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <meta name="referrer" content="no-referrer" />
-        <title>搜尋 - {{ comic_name }}</title>
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
-    
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" crossorigin="anonymous"></script>
-        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
-    </head>
-    <style>
-      .card-body{
-            text-align: center;
-        }
-        .circle,.left-circle{
-            position: fixed;
-            background-color: white;
-            opacity: 0.5;
-            height: 80px;
-            width: 80px;
-            left: 50%;
-            margin: +40px 0 0 -47px;
-            border-radius: 50%;
-            z-index: 999;
-            text-align: center;
-        }
-        .label-circle{
-            padding: 25px 0px;
-        }
-    </style>
-    <body>
-      <div class="m_nav">
-        <div class="c_o circle"><label class="label-circle">TAP</label></div>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="referrer" content="no-referrer" />
+  <title>搜尋 - {{ comic_name }}</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+    integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+    integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous">
+  </script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
+    integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous">
+  </script>
+</head>
+<style>
+  body {
+    position: relative;
+    padding-bottom: 70px;
+  }
+
+  .card-body {
+    text-align: center;
+  }
+
+  .circle,
+  .left-circle {
+    position: fixed;
+    background-color: white;
+    opacity: 0.5;
+    height: 80px;
+    width: 80px;
+    left: 50%;
+    margin: +40px 0 0 -47px;
+    border-radius: 50%;
+    z-index: 999;
+    text-align: center;
+  }
+
+  .label-circle {
+    padding: 25px 0px;
+  }
+
+  .bottom {
+    position: fixed;
+    bottom: 0px;
+    width: 100%;
+    height: 50px;
+  }
+</style>
+
+<body>
+  <div class="m_nav">
+    <div class="c_o circle"><label class="label-circle">TAP</label></div>
+  </div>
+
+  <div class="center">
+    {% for comic in search.comics %}
+    {% if forloop.first %}<div class="row">{% endif %}
+      <div class="card col-6 col-sm-3">
+        <img src="{{ comic.img_url }}" class="card-img-top">
+        <div class="card-body">
+          <h5 class="card-title">{{ comic.name }}</h5>
+          <button onclick="go_chapters('{{ comic.name}}','{{ comic.href}}','{{ version }}')"
+            class="btn btn-primary">GO</button>
+        </div>
       </div>
-      <div class = "center">
-        {% for comic in comics %}
-          {% if forloop.first %}<div class="row">{% endif %}
-          <div class="card col-6 col-sm-3">
-            <img src="{{ comic.img_url }}" class="card-img-top">
-            <div class="card-body">
-              <h5 class="card-title">{{ comic.name }}</h5>
-              <button onclick="go_chapters('{{ comic.name}}','{{ comic.href}}','{{ version }}')" class="btn btn-primary">GO</button>
-            </div>
-          </div>
-          {% if forloop.counter|divisibleby:"4" %}</div><div class="row">{% endif %}
-          {% if forloop.last %}</div>{% endif %}
-        {% endfor %}
+      {% if forloop.counter|divisibleby:"4" %}</div>
+    <div class="row">{% endif %}
+      {% if forloop.last %}</div>{% endif %}
+    {% endfor %}
+  </div>
+  <div class="bottom">
+    <div class="input-group mb-3">
+
+      <button class="gb btn btn-success" type="button" onclick="prePage()"><span
+          aria-hidden="true">&laquo;</span></button>
+      <button class="gb btn btn-success" type="button" onclick="go_page('1')">1</button>
+
+      <input type="text" class="j_p_i form-control" placeholder="跳到?頁">
+      <button type="submit" class="btn btn-primary" onclick="jump()">JUMP</button>
+      <button class="gb btn btn-success" type="button"
+        onclick="go_page('{{search.page_num}}')">{{search.page_num}}</button>
+      <button class="gb btn btn-success" type="button" onclick="nextPage()"><span
+          aria-hidden="true">&raquo;</span></button>
+    </div>
+
+    <form class="m_f form-inline" action="/app/search" method="POST">
+      {% csrf_token %}
+      <div class="form-group mx-sm-3 mb-2">
+        <input type="hidden" class="form-control" name="comic_name" autocomplete="off" value="{{ comic_name }}">
+        <input type="text" class="p_f form-control" name="page" autocomplete="off">
+        <input type="hidden" class="form-control" name="version" value="{{ version }}">
       </div>
-    </body>
-    <script>
+    </form>
+  </div>
+</body>
+<script>
+  function prePage() {
+    var c_p = "{{ current_page }}"
+    var p_p = parseInt(c_p) - 1
+    if (p_p == 0) {
+      p_p = 1
+    }
+    $('.p_f').val(p_p)
+    $('.m_f').submit()
+  }
 
-      function go_chapters(comic_name,href,version) {
-        var comic_name_e = encodeURIComponent(comic_name)
-        window.location.href = `/app/show/${comic_name_e}${href}${version }`
-      }
+  function nextPage() {
+    var c_p = "{{ current_page }}"
+    var n_p = parseInt(c_p) + 1
+    var s_m_p = parseInt("{{ search.page_num }}")
+    if (n_p > s_m_p) {
+      n_p = s_m_p
+    }
+    $('.p_f').val(n_p)
+    $('.m_f').submit()
+  }
 
-      function go_home() {
-          window.location.href = '/app'
-      }
+  function go_page(page) {
+    $('.p_f').val(page)
+    $('.m_f').submit()
+  }
 
-      var status = 0
-        $(".circle").mouseup(function(){
-            if (status == -1) {
-                return
-            }
-            status = -1
+  function jump() {
+    var p = parseInt($('.j_p_i').val())
+    $('.j_p_i').val("")
+    if (isNaN(p)) {
+      return
+    }
+    if (p < 1) {
+      p = 1
+    }
+    var s_m_p = parseInt("{{ search.page_num }}")
+    if (isNaN(s_m_p)) {
+      return
+    }
+    if (p > s_m_p) {
+      p = s_m_p
+    }
+    go_page(p)
+  }
 
-            var ori_top = 40
-            var step_top = 120
-            var tar_top = ori_top + step_top
-            
-            $(".circle").animate({"top":tar_top}, "slow",function () {
-                $(".m_nav").append(`<div onclick="go_home()" class="c_o left-circle" style="top: ${tar_top}px;"><label class="label-circle">回首頁</label></div>`)
+  function go_chapters(comic_name, href, version) {
+    var comic_name_e = encodeURIComponent(comic_name)
+    window.location.href = `/app/show/${comic_name_e}${href}${version }`
+  }
 
-                $('.c_o').css("opacity",0.8)
+  function go_home() {
+    window.location.href = '/app'
+  }
 
-                var p_step = "+=" + step_top
-                var n_step = "-=" + step_top
+  var status = 0
+  $(".circle").mouseup(function () {
+    if (status == -1) {
+      return
+    }
+    status = -1
 
-                $(".left-circle").animate({"left":n_step}, "slow")
+    var ori_top = 40
+    var step_top = 120
+    var tar_top = ori_top + step_top
 
-                var timeoutID = window.setTimeout(function () {
-                    $(".left-circle").animate({"left":p_step}, "slow",function (params) {
-                        $(".left-circle").remove()
-                        $(".circle").animate({"top":ori_top}, "slow")
-                        $('.c_o').css("opacity",0.5)
-                        status = 0
-                    })
-                }, 3400);
-            });
-           
-        });
-    </script>
+    $(".circle").animate({
+      "top": tar_top
+    }, "slow", function () {
+      $(".m_nav").append(
+        `<div onclick="go_home()" class="c_o left-circle" style="top: ${tar_top}px;"><label class="label-circle">回首頁</label></div>`
+      )
+
+      $('.c_o').css("opacity", 0.8)
+
+      var p_step = "+=" + step_top
+      var n_step = "-=" + step_top
+
+      $(".left-circle").animate({
+        "left": n_step
+      }, "slow")
+
+      var timeoutID = window.setTimeout(function () {
+        $(".left-circle").animate({
+          "left": p_step
+        }, "slow", function (params) {
+          $(".left-circle").remove()
+          $(".circle").animate({
+            "top": ori_top
+          }, "slow")
+          $('.c_o').css("opacity", 0.5)
+          status = 0
+        })
+      }, 3400);
+    });
+
+  });
+</script>
+
 </html>

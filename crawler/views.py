@@ -7,8 +7,10 @@ from crawler.encoder import jsonEncoder as encoder
 from django.views.decorators.csrf import csrf_exempt
 import json
 
+
 def home(request):
     return render(request, 'home/home.html')
+
 
 @csrf_exempt
 def search_comic(request):
@@ -17,40 +19,43 @@ def search_comic(request):
         if form.is_valid():
             comic_name = form.cleaned_data['comic_name']
             version = form.cleaned_data['version']
+            page = form.cleaned_data['page']
 
-            comics = cc.crawl_search_comic(comic_name,version)
-            if len(comics) > 0 :
-                return render(request,'comics/search.html',{
+            search = cc.crawl_search_comic(comic_name, page,version)
+            if search.page_num > 0:
+                return render(request, 'comics/search.html', {
                     'comic_name': comic_name,
                     'version': version,
-                    'comics':  comics
+                    'current_page': page,
+                    'search':  search
                 })
             else:
-                return render(request, 'home/home.html',{
+                return render(request, 'home/home.html', {
                     'version': version,
                     "statement": "找不到符合的漫畫喔!!"
                 })
-            
-    return render(request, 'home/home.html',{
+
+    return render(request, 'home/home.html', {
         'version': "0",
         "statement": "請再次輸入!!"
     })
 
-def show_comic(request,name,href,version):
-    comic = cc.crawl_one_comic(href,version)
+def show_comic(request, name, href, version):
+    comic = cc.crawl_one_comic(href, version)
     comic.chapters.reverse()
-    return render(request, 'comics/chapters.html',{
-                    'name': name,
-                    'version': version,
-                    'comic_chapters_num': len(comic.chapters),
-                    'comic':  comic
-                })
+    return render(request, 'comics/chapters.html', {
+        'name': name,
+        'version': version,
+        'comic_chapters_num': len(comic.chapters),
+        'comic':  comic
+    })
 
-def read_comic(request,name,href,title,version):
-    comic = cc.crawl_one_comic(href,version)
+
+def read_comic(request, name, href, title, version):
+    comic = cc.crawl_one_comic(href, version)
     if version == "1":
         base_img_url = comic.chapters[0].base_img_url
-        return render(request, 'comics/read.html',{
+        return render(request, 'comics/read.html', {
             'name': name,
             'title': title,
             'href': href,
@@ -65,7 +70,7 @@ def read_comic(request,name,href,title,version):
             if comic.chapters[i].title == title:
                 current_index = i
                 break
-        
+
         pre_chapter_index = current_index
         next_chapter_index = current_index
         if current_index - 1 >= 0:
@@ -76,8 +81,8 @@ def read_comic(request,name,href,title,version):
         print(pre_chapter_index)
         print(next_chapter_index)
 
-        base_img_url = cc.comic_img_base_url + "/" + href + "/" +title
-        return render(request, 'comics/read.html',{
+        base_img_url = cc.comic_img_base_url + "/" + href + "/" + title
+        return render(request, 'comics/read.html', {
             'name': name,
             'title': title,
             'href': href,

@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <meta charset="utf-8" />
+        <meta charset="utf-8">
         <title>漫畫 - 爬蟲</title>
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <meta name="referrer" content="no-referrer" />
+        <meta name="referrer" content="no-referrer">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
     
         <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
@@ -37,10 +37,11 @@
           </nav>
         <div class="center">
             <span class="badge badge-light">{{ statement }}</span>
-            <form class="form-inline" action="search" method="POST">
+            <form class="form-inline" action="/app/search" method="POST">
                 {% csrf_token %}
                 <div class="form-group mx-sm-3 mb-2">
                     <input type="text" class="form-control" name = "comic_name" placeholder="漫畫名稱" autocomplete="off">
+                    <input type="hidden" class="form-control" name = "page" value="1">
                     <input type="hidden" class="v_f form-control" name = "version">
                   </div>
                 <button type="submit" class="btn btn-primary mb-2">查詢</button>
