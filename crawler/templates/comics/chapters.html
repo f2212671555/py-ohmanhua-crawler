@@ -1,152 +1,180 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <meta name="referrer" content="no-referrer" />
-        <title>{{ name }}</title>
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
-    
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
-    </head>
-    <style>
-        body {
-            position: relative;
-            padding-bottom: 60px;
-        }
-        .ji ,.card-title{
-            text-align: center;
-        }
-        .bottom{
-            position: fixed;
-            bottom:0px;
-            width:100%;
-            height:50px;
-        }
-        .circle,.left-circle{
-            position: fixed;
-            background-color: white;
-            opacity: 0.5;
-            height: 80px;
-            width: 80px;
-            left: 50%;
-            margin: +40px 0 0 -47px;
-            border-radius: 50%;
-            z-index: 999;
-            text-align: center;
-        }
-        .label-circle{
-            padding: 25px 0px;
-        }
-    </style>
-    <body>
-        <div class="m_nav">
-            <div class="c_o circle"><label class="label-circle">TAP</label></div>
-          </div>
-        <div>
-            {% for chapter in comic.chapters %} 
-            <div class="card">
-                <span id="chapter{{ forloop.counter }}" class="badge badge-dark">{{ forloop.counter }}</span>
-                <div class="card-body" onclick="window.location.href='/app/read/{{ name }}/{{ comic.href }}/{{ chapter.title }}/{{ version }}'">
-                    <h5 class="card-title">{{ chapter.title }}</h5>
-                </div>
-              </div>
-            {% endfor %}
-        </div>
-        <div class="bottom">
-            <div class="input-group mb-3">
-                <div class="input-group-append">
-                    <button class="gb btn btn-success" type="button" onclick="jump('top')">TOP</button>
-                    <button class="gb btn btn-success" type="button" onclick="jump('down')">DOWN</button>
-                </div>
-                <input type="text" class="ji form-control" placeholder="跳到?話">
-                <div class="input-group-append">
-                  <button class="gb btn btn-success" type="button" onclick="jump('go')">GO</button>
-                </div>
-              </div>
-        </div>
-    </body>
-    <script>
-        $(document).ready(function(){
-            $('.card-body').mousedown(function(event){
-                $(this).css("background-color", "Violet");
-            });
 
-            $(".card-body").hover(function(){
-                $(this).css("background-color", "Lavender");
-                }, function(){
-                $(this).css("background-color", "white");
-            });
-        })
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1.0,user-scalable=0 ,shrink-to-fit=no">
+    <meta name="referrer" content="no-referrer" />
+    <title>{{ name }}</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+        integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
 
-        function jump(param) {
-            var comic_chapters_num = "{{ comic_chapters_num }}"
-            var t_n = 1
-            switch (param) {
-                case 'top':
-                    t_n = 1
-                    break;
-                case 'down':
-                    t_n = comic_chapters_num
-                    break;
-                default:{
-                    t_n = parseInt($('.ji').val());
-                    $('.ji').val("")
-                    if (isNaN(t_n)) {
-                        return
-                    }
-                    
-                    if (comic_chapters_num < t_n) {
-                        t_n = comic_chapters_num
-                    }
-                    if (0 >= t_n) {
-                        t_n = 1
-                    }
-                    break;
-                }  
-            }
-                
-            var t = "#chapter" + t_n
-            $('html,body').animate({scrollTop:$(t).offset().top}, 500);
-        }
-
-        function go_home() {
-            window.location.href='/app'
-        }
-
-        var status = 0
-        $(".circle").mouseup(function(){
-            if (status == -1) {
-                return
-            }
-            status = -1
-
-            var ori_top = 40
-            var step_top = 120
-            var tar_top = ori_top + step_top
-            
-            $(".circle").animate({"top":tar_top}, "slow",function () {
-                $(".m_nav").append(`<div onclick="go_home()" class="c_o left-circle" style="top: ${tar_top}px;"><label class="label-circle">回首頁</label></div>`)
-
-                $('.c_o').css("opacity",0.8)
-
-                var p_step = "+=" + step_top
-                var n_step = "-=" + step_top
-
-                $(".left-circle").animate({"left":n_step}, "slow")
-
-                var timeoutID = window.setTimeout(function () {
-                    $(".left-circle").animate({"left":p_step}, "slow",function (params) {
-                        $(".left-circle").remove()
-                        $(".circle").animate({"top":ori_top}, "slow")
-                        $('.c_o').css("opacity",0.5)
-                        status = 0
-                    })
-                }, 3400);
-            });
-           
-        });
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous">
     </script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
+        integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous">
+    </script>
+</head>
+<style>
+    body {
+        position: relative;
+        padding-bottom: 60px;
+    }
+
+    .ji,
+    .card-title {
+        text-align: center;
+    }
+
+    .bottom {
+        position: fixed;
+        bottom: 0px;
+        width: 100%;
+        height: 50px;
+    }
+
+    .circle,
+    .left-circle {
+        position: fixed;
+        background-color: white;
+        opacity: 0.5;
+        height: 80px;
+        width: 80px;
+        left: 50%;
+        margin: +40px 0 0 -47px;
+        border-radius: 50%;
+        z-index: 999;
+        text-align: center;
+    }
+
+    .label-circle {
+        padding: 25px 0px;
+    }
+</style>
+
+<body>
+    <div class="m_nav">
+        <div class="c_o circle"><label class="label-circle">TAP</label></div>
+    </div>
+    <div>
+        {% for chapter in comic.chapters %}
+        <div class="card">
+            <span id="chapter{{ forloop.counter }}" class="badge badge-dark">{{ forloop.counter }}</span>
+            <div class="card-body"
+                onclick="window.location.href='/app/read/{{ name }}/{{ comic.href }}/{{ chapter.title }}/{{ version }}'">
+                <h5 class="card-title">{{ chapter.title }}</h5>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    <div class="bottom">
+        <div class="input-group mb-3">
+            <div class="input-group-append">
+                <button class="gb btn btn-success" type="button" onclick="jump('top')">TOP</button>
+                <button class="gb btn btn-success" type="button" onclick="jump('down')">DOWN</button>
+            </div>
+            <input type="text" class="ji form-control" placeholder="跳到?話">
+            <div class="input-group-append">
+                <button class="gb btn btn-success" type="button" onclick="jump('go')">GO</button>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    $(document).ready(function () {
+        $('.card-body').mousedown(function (event) {
+            $(this).css("background-color", "Violet");
+        });
+
+        $(".card-body").hover(function () {
+            $(this).css("background-color", "Lavender");
+        }, function () {
+            $(this).css("background-color", "white");
+        });
+    })
+
+    function jump(param) {
+        var comic_chapters_num = "{{ comic_chapters_num }}"
+        var t_n = 1
+        switch (param) {
+            case 'top':
+                t_n = 1
+                break;
+            case 'down':
+                t_n = comic_chapters_num
+                break;
+            default: {
+                t_n = parseInt($('.ji').val());
+                $('.ji').val("")
+                if (isNaN(t_n)) {
+                    return
+                }
+
+                if (comic_chapters_num < t_n) {
+                    t_n = comic_chapters_num
+                }
+                if (0 >= t_n) {
+                    t_n = 1
+                }
+                break;
+            }
+        }
+
+        var t = "#chapter" + t_n
+        $('html,body').animate({
+            scrollTop: $(t).offset().top
+        }, 500);
+    }
+
+    function go_home() {
+        window.location.href = '/app'
+    }
+
+    var status = 0
+    $(".circle").mouseup(function () {
+        if (status == -1) {
+            return
+        }
+        status = -1
+
+        var ori_top = 40
+        var step_top = 120
+        var tar_top = ori_top + step_top
+
+        $(".circle").animate({
+            "top": tar_top
+        }, "slow", function () {
+            $(".m_nav").append(
+                `<div onclick="go_home()" class="c_o left-circle" style="top: ${tar_top}px;"><label class="label-circle">回首頁</label></div>`
+                )
+
+            $('.c_o').css("opacity", 0.8)
+
+            var p_step = "+=" + step_top
+            var n_step = "-=" + step_top
+
+            $(".left-circle").animate({
+                "left": n_step
+            }, "slow")
+
+            var timeoutID = window.setTimeout(function () {
+                $(".left-circle").animate({
+                    "left": p_step
+                }, "slow", function (params) {
+                    $(".left-circle").remove()
+                    $(".circle").animate({
+                        "top": ori_top
+                    }, "slow")
+                    $('.c_o').css("opacity", 0.5)
+                    status = 0
+                })
+            }, 3400);
+        });
+
+    });
+</script>
+
 </html>
