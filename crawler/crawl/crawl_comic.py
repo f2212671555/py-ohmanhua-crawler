@@ -19,7 +19,7 @@ def crawl_search_comic(searchString, page, version):
 
     # --version----
     if version == "1":
-        url = base_search_url_dark + encodeStr
+        url = base_search_url_dark + encodeStr + "&page=" + page
     else:
         url = base_search_url + encodeStr + "&page=" + page
     # --version----
@@ -37,6 +37,14 @@ def crawl_search_comic(searchString, page, version):
     comics = []
     # --version----
     if version == "1":
+        end_page = 1
+        a_s = soup.findAll(
+            "a", {"class": "last"})
+        for a in a_s:
+            end_page = int(a["href"].split("page=",1)[1])
+            # print(end_page)
+        page_num = end_page
+
         divs = soup.findAll("div", {"class": "gallery"})
         for div in divs:
             div_a = div.select_one("div a")
