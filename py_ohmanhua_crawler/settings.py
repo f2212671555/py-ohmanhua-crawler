@@ -120,3 +120,5 @@ USE_TZ = True
 
 STATIC_ROOT = os.path.join(BASE_DIR,'staticfiles')
 STATIC_URL = '/static/'
+
+SECURE_REFERRER_POLICY = "no-referrer-when-downgrade"
