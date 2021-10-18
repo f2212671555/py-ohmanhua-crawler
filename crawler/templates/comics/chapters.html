@@ -60,11 +60,19 @@
         <div class="c_o circle"><label class="label-circle">TAP</label></div>
     </div>
     <div>
+        <form id="targetForm" action="/app/read" method="post">
+            {% csrf_token %}
+            {{ form }}
+            <input type="hidden" name="name" value="{{ name }}">
+            <input type="hidden" name="href" value="{{ comic.href }}">
+            <input type="hidden" name="version" value="{{ version }}">
+            <input type="hidden" name="target_chapter" value="">
+        </form>
         {% for chapter in comic.chapters %}
         <div class="card">
             <span id="chapter{{ forloop.counter }}" class="badge badge-dark">{{ forloop.counter }}</span>
             <div class="card-body"
-                onclick="window.location.href='/app/read/{{ name }}/{{ comic.href }}/{{ chapter.title }}/{{ version }}'">
+                onclick="targetChapter('{{ chapter.title }}')">
                 <h5 class="card-title">{{ chapter.title }}</h5>
             </div>
         </div>
@@ -95,6 +103,11 @@
             $(this).css("background-color", "white");
         });
     })
+
+    function targetChapter(target) {
+        document.forms['targetForm']['target_chapter'].value = target;
+        document.getElementById("targetForm").submit();
+    }
 
     function jump(param) {
         var comic_chapters_num = "{{ comic_chapters_num }}"

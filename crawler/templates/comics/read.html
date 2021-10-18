@@ -61,12 +61,27 @@
     </div>
     <div class="container">
         <div class="row">
-            <button type="button" class="c btn btn-primary col" onclick="go_chapters()">回目錄</button>
+            <form action="/app/show" method="post">
+                {% csrf_token %}
+                {{ form }}
+                <input type="hidden" name="name" value="{{ name }}">
+                <input type="hidden" name="href" value="{{ href }}">
+                <input type="hidden" name="version" value="{{ version }}">
+                <input type="submit" class="submit_btn btn label-success" value="回章節" />
+            </form>
             <button type="button" class="h btn btn-primary col" onclick="go_home()">回首頁</button>
         </div>
         <div id="imgs" class="row">
         </div>
         <div class="row">
+            <form id="preOrNextForm" action="/app/read" method="post">
+                {% csrf_token %}
+                {{ form }}
+                <input type="hidden" name="name" value="{{ name }}">
+                <input type="hidden" name="href" value="{{ href }}">
+                <input type="hidden" name="version" value="{{ version }}">
+                <input type="hidden" name="target_chapter" value="">
+            </form>
             <button type="button" class="p btn btn-primary col" onclick="prePage()">上一話</button>
             <button type="button" class="n btn btn-primary col" onclick="nextPage()">下一話</button>
         </div>
@@ -111,10 +126,6 @@
 
     }
 
-    function go_chapters() {
-        window.location.href = '/app/show/{{ name }}/{{ href }}/{{ version }}'
-    }
-
     function go_home() {
         window.location.href = '/app'
     }
@@ -124,7 +135,8 @@
         if (c == "") {
             return
         }
-        window.location.href = '/app/read/{{ name }}/{{ href }}/{{ next_chapter }}/{{ version }}'
+        document.forms['preOrNextForm']['target_chapter'].value = c;
+        document.getElementById("preOrNextForm").submit();
     }
 
     function nextPage() {
@@ -132,7 +144,8 @@
         if (c == "") {
             return
         }
-        window.location.href = '/app/read/{{ name }}/{{ href }}/{{ pre_chapter }}/{{ version }}'
+        document.forms['preOrNextForm']['target_chapter'].value = c;
+        document.getElementById("preOrNextForm").submit();
     }
 
     var status = 0

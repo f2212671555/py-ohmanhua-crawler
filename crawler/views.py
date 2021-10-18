@@ -6,7 +6,9 @@ import crawler.beans.chapter as c
 from crawler.encoder import jsonEncoder as encoder
 from django.views.decorators.csrf import csrf_exempt
 import json
+import urllib.request as req
 
+comic_image_api_url = "https://comic-api-server.herokuapp.com/comic/image/"
 
 def home(request):
     return render(request, 'home/home.html')
@@ -39,8 +41,11 @@ def search_comic(request):
         'version': "0",
         "statement": "請再次輸入!!"
     })
-
-def show_comic(request, name, href, version):
+# , name, version
+def show_comic(request):
+    name = request.POST.get("name","")
+    href = request.POST.get("href","")
+    version = request.POST.get("version","")
     comic = cc.crawl_one_comic(href, version)
     comic.chapters.reverse()
     return render(request, 'comics/chapters.html', {
@@ -51,7 +56,11 @@ def show_comic(request, name, href, version):
     })
 
 
-def read_comic(request, name, href, title, version):
+def read_comic(request):
+    name = request.POST.get("name","")
+    href = request.POST.get("href","")
+    title = request.POST.get("title","")
+    version = request.POST.get("version","")
     comic = cc.crawl_one_comic(href, version)
     if version == "1":
         base_img_url = comic.chapters[0].base_img_url
@@ -80,8 +89,16 @@ def read_comic(request, name, href, title, version):
 
         print(pre_chapter_index)
         print(next_chapter_index)
+        print(comic.chapters[current_index].href)
+        data = {"url":comic.chapters[current_index].href} 
+        data = json.dumps(data).encode('utf8')
+        imgRequest = req.Request(comic_image_api_url, data=data,
+                            headers={'content-type': 'application/json'})
+        with req.urlopen(imgRequest) as response:
+            data = response.read().decode("utf-8")
+        base_img_url = json.loads(data)[0]['url'].split('/0001')[0]
+        print(base_img_url)
 
-        base_img_url = cc.comic_img_base_url + "/" + href + "/" + title
         return render(request, 'comics/read.html', {
             'name': name,
             'title': title,

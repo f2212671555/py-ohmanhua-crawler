@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import json
 import urllib.request as req
 import urllib.parse as parse
 import bs4
@@ -6,11 +7,10 @@ import crawler.beans.search as s
 import crawler.beans.comic as c
 import crawler.beans.chapter as ch
 
-base_url = "https://www.ohmanhua.com/"
-base_search_url = "https://www.ohmanhua.com/search?searchString="
+comic_api_url = "https://comic-api-server.herokuapp.com/searchString/"
+comic_chapter_api_url = "https://comic-api-server.herokuapp.com/comic/chapter/"
 base_search_url_dark = "https://nhentai.net/search/?q="
 base_g_url_dark = "https://nhentai.net/g/"
-comic_img_base_url = "https://img.ohmanhua.com/comic"
 comic_img_base_url_dark = "https://t.nhentai.net/galleries"
 
 
@@ -21,22 +21,24 @@ def crawl_search_comic(searchString, page, version):
     if version == "1":
         url = base_search_url_dark + encodeStr + "&page=" + page
     else:
-        url = base_search_url + encodeStr + "&page=" + page
+        # url = base_search_url + encodeStr + "&page=" + page
+        url = comic_api_url + encodeStr + "&page=" + page
     # --version----
 
     request = req.Request(url, headers={
-        "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36"
+        "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.71 Safari/537.36"
     })
 
     with req.urlopen(request) as response:
         data = response.read().decode("utf-8")
 
-    soup = bs4.BeautifulSoup(data, "html.parser")
-
     page_num = 1
     comics = []
     # --version----
     if version == "1":
+
+        soup = bs4.BeautifulSoup(data, "html.parser")
+
         end_page = 1
         a_s = soup.findAll(
             "a", {"class": "last"})
@@ -59,27 +61,14 @@ def crawl_search_comic(searchString, page, version):
             comics.append(c.Comic(comic_name, comic_url, comic_img_url))
             # break                         # ---ttttteeeessstttt----
     else:
-        end_page = 1
-        a_s = soup.findAll(
-            "a", {"class": "fed-btns-info fed-rims-info show-page-jump"})
-        for a in a_s:
-            end_page = int(a["data-total"])
-            # print(end_page)
-        page_num = end_page
-
-        dls = soup.findAll("dl", {
-            "class": "fed-deta-info fed-deta-padding fed-line-top fed-margin fed-part-rows fed-part-over"})
-        for dl in dls:
-            dt_a = dl.select_one("dt a")
-            comic_img_url = dt_a["data-original"]
-            # print(comic_img_url)
-            dd_a = dl.select_one("dd a")
-            comic_url = dd_a["href"]
-            # print(comic_url)
-            comic_name = dd_a.text
-            # print(comic_name)
+        # api version
+        data = json.loads(data)
+        for d in data:
+            comic_name = d['name']
+            comic_url = d['link']
+            comic_img_url = d['imgUrl']
             comics.append(c.Comic(comic_name, comic_url, comic_img_url))
-            # break                         # ---ttttteeeessstttt----
+        # crawler version is gg
     # --version----
 
     if len(comics) == 0:
@@ -92,20 +81,19 @@ def crawl_one_comic(href, version):
     if version == "1":
         url = base_g_url_dark + href
     else:
-        url = base_url + href
+        url = comic_chapter_api_url
     # --version----
-    request = req.Request(url, headers={
-        "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36"
-    })
-
-    with req.urlopen(request) as response:
-        data = response.read().decode("utf-8")
-
-    soup = bs4.BeautifulSoup(data, "html.parser")
 
     chapters = []
     # --version----
     if version == "1":
+        request = req.Request(url, headers={
+            "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36"
+        })
+
+        with req.urlopen(request) as response:
+            data = response.read().decode("utf-8")
+        soup = bs4.BeautifulSoup(data, "html.parser")
         h2s = soup.findAll("h2", {"class": "title"})
         for h2 in h2s:
             title_1 = h2.select_one("span.before").text
@@ -120,14 +108,16 @@ def crawl_one_comic(href, version):
         base_img_url = comic_img_base_url_dark + div_img_href
         chapters.append(ch.Chapter(title, href, base_img_url))
     else:
-        lis = soup.findAll(
-            "li", {"class": "fed-padding fed-col-xs6 fed-col-md3 fed-col-lg3"})
-        for li in lis:
-            a = li.select_one("a")
-            title = a["title"]
-            # print(title)
-            base_img_url = comic_img_base_url + href + title
-            chapters.append(ch.Chapter(title, href, base_img_url))
-            # break                         # ---ttttteeeessstttt----
+        data = {"url":href} 
+        data = json.dumps(data).encode('utf8')
+        request = req.Request(url, data=data,
+                             headers={'content-type': 'application/json'})
+        with req.urlopen(request) as response:
+            data = response.read().decode("utf-8")
+        data = json.loads(data)
+        for d in data:
+            title = d['title']
+            c_href = d['href']
+            chapters.append(ch.Chapter(title, c_href))
     # --version----
     return c.Comic("", href, "", "", chapters)

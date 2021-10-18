@@ -66,8 +66,14 @@
         <img src="{{ comic.img_url }}" class="card-img-top">
         <div class="card-body">
           <h5 class="card-title">{{ comic.name }}</h5>
-          <button onclick="go_chapters('{{ comic.name}}','{{ comic.href}}','{{ version }}')"
-            class="btn btn-primary">GO</button>
+          <form action="/app/show" method="post">
+            {% csrf_token %}
+            {{ form }}
+            <input type="hidden" name="name" value="{{ comic.name }}">
+            <input type="hidden" name="href" value="{{ comic.href }}">
+            <input type="hidden" name="version" value="{{ version }}">
+            <input type="submit" class="submit_btn btn label-success" value="GO" />
+            </form>
         </div>
       </div>
       {% if forloop.counter|divisibleby:"4" %}</div>
@@ -143,11 +149,6 @@
       p = s_m_p
     }
     go_page(p)
-  }
-
-  function go_chapters(comic_name, href, version) {
-    var comic_name_e = encodeURIComponent(comic_name)
-    window.location.href = `/app/show/${comic_name_e}${href}${version }`
   }
 
   function go_home() {
