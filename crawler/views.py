@@ -87,9 +87,6 @@ def read_comic(request):
         if current_index + 1 < len(comic.chapters):
             next_chapter_index = current_index + 1
 
-        print(pre_chapter_index)
-        print(next_chapter_index)
-        print(comic.chapters[current_index].href)
         data = {"url":comic.chapters[current_index].href} 
         data = json.dumps(data).encode('utf8')
         imgRequest = req.Request(comic_image_api_url, data=data,
